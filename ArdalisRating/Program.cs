@@ -1,23 +1,40 @@
-﻿using System;
-
-namespace ArdalisRating
+﻿namespace ArdalisRating
 {
     class Program
     {
+        /*    Identifiy Reponsibilities/Separation of Concerns
+         *      Presistence
+         *      Logging
+         *      Validation
+         *      Business Logic
+         * 
+         *    Tight Coupling
+         *      Binds two (or more) details together in a way that's difficult to change.
+         *      
+         *    Loose Coupling
+         *      Offers a modular way to choose which details are involved in particular operation.
+         * 
+         */
         static void Main(string[] args)
         {
-            Console.WriteLine("Ardalis Insurance Rating System Starting...");
+            ILogger logger;
+            IFilePolicySource dataAccess;
 
-            var engine = new RatingEngine();
+            logger = new ConsoleLogger();
+            dataAccess = new FilePolicySource();
+
+            logger.Information("Ardalis Insurance Rating System Starting...");
+
+            var engine = new RatingEngine(logger, dataAccess);
             engine.Rate();
 
             if (engine.Rating > 0)
             {
-                Console.WriteLine($"Rating: {engine.Rating}");
+                logger.Information($"Rating: {engine.Rating}");
             }
             else
             {
-                Console.WriteLine("No rating produced.");
+                logger.Information("No rating produced.");
             }
 
         }
