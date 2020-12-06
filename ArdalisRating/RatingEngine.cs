@@ -14,6 +14,7 @@ namespace ArdalisRating
 
         private readonly ILogger _logger;
         private readonly IFilePolicySource _dataAccess;
+        private PolicySerializer PolicySerializer = new PolicySerializer();
 
         public RatingEngine(ILogger logger, IFilePolicySource filePolicy)
         {
@@ -31,8 +32,7 @@ namespace ArdalisRating
             // load policy - open file policy.json
             string policyJson = _dataAccess.GetPolicyFromSource();                  //<--- Persistence/Data Access
 
-            var policy = JsonConvert.DeserializeObject<Policy>(policyJson,          //<--- Hard coded Format json... yaml, xml, binary format this will have to change
-                new StringEnumConverter());
+            var policy = PolicySerializer.GetPolicyFromJsonString(policyJson);      //<--- Hard coded Format json... yaml, xml, binary format this will have to change
 
             switch (policy.Type)
             {
